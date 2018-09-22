@@ -1,37 +1,35 @@
 import React from "react";
 import PokemonListItem from "./pokemon-list-item";
 import { connect } from "react-redux";
-import * as types from "./store";
+import { FETCHING_POKEMON, pokemonSelector } from "./store";
 
-const App = props => {
-	// async componentDidMount() {
-	// 	const response = await fetch("https://pokeapi.co/api/v2/pokemon/");
-	// 	const data = await response.json();
-	// 	this.setState({ pokemons: data.results });
-	// }
+class App extends React.Component {
+	componentDidMount() {
+		this.props.dispatch({ type: FETCHING_POKEMON });
+	}
 
-	props.dispatch({ type: types.FETCHING_POKEMON });
-
-	return (
-		<div>
-			<h1>Pokedex</h1>
-			<div
-				style={{
-					display: "grid",
-					gridTemplateColumns: "auto auto auto auto",
-					justifyContent: "space-around"
-				}}
-			>
-				{/* {this.state.pokemons.length &&
-					this.state.pokemons.map((pokemon, i) => (
-						<PokemonListItem
-							id={this.state.page * 20 + i + 1}
-							{...pokemon}
-						/>
-					))} */}
+	render() {
+		console.log(this.props);
+		return (
+			<div>
+				<h1>Pokedex</h1>
+				<div
+					style={{
+						display: "grid",
+						gridTemplateColumns: "auto auto auto auto",
+						justifyContent: "space-around"
+					}}
+				>
+					{this.props.pokemonList.length &&
+						this.props.pokemonList.map((pokemon, i) => (
+							<PokemonListItem key={pokemon.name} {...pokemon} />
+						))}
+				</div>
 			</div>
-		</div>
-	);
-};
+		);
+	}
+}
 
-export default connect()(App);
+const mapStateToProps = state => ({ pokemonList: pokemonSelector(state) });
+
+export default connect(mapStateToProps)(App);
